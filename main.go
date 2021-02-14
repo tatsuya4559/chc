@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -38,26 +39,33 @@ func main() {
 
 	flag.Parse()
 
+	var r io.Reader
 	if isatty.IsTerminal(os.Stdin.Fd()) {
 		// interactive
-		r := strings.NewReader(strings.Join(flag.Args(), "\n"))
-		Process(r, os.Stdout, *casePtr)
+		r = strings.NewReader(strings.Join(flag.Args(), "\n"))
 	} else {
 		// pipe
-		Process(os.Stdin, os.Stdout, *casePtr)
+		r = os.Stdin
+	}
+	if err := Process(r, os.Stdout, *casePtr); err != nil {
+		log.Fatal(err)
 	}
 }
 
-func Process(in io.Reader, out io.Writer, opt string) {
+func Process(in io.Reader, out io.Writer, opt string) error {
 	scanner := bufio.NewScanner(in)
 	scanner.Split(bufio.ScanWords)
 	for scanner.Scan() {
 		word := strings.TrimSpace(scanner.Text())
-		fmt.Fprintln(out, ChangeCase(opt, word))
+		n, err := fmt.Fprintln(out, ChangeCase(opt, word))
+		if err != nil {
+			return err
+		}
+		if n == 0 {
+			return errors.New("nothing printed")
+		}
 	}
-	if err := scanner.Err(); err != nil {
-		log.Fatalf("error while reading io: %v", err)
-	}
+	return scanner.Err()
 }
 
 // ChangeCase changes case-style of word.
