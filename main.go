@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -39,20 +40,23 @@ func main() {
 
 	if isatty.IsTerminal(os.Stdin.Fd()) {
 		// interactive
-		for _, word := range flag.Args() {
-			fmt.Println(ChangeCase(*casePtr, word))
-		}
+		r := strings.NewReader(strings.Join(flag.Args(), "\n"))
+		Process(r, os.Stdout, *casePtr)
 	} else {
 		// pipe
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Split(bufio.ScanWords)
-		for scanner.Scan() {
-			word := strings.TrimSpace(scanner.Text())
-			fmt.Println(ChangeCase(*casePtr, word))
-		}
-		if err := scanner.Err(); err != nil {
-			log.Fatalf("error while reading pipe: %v", err)
-		}
+		Process(os.Stdin, os.Stdout, *casePtr)
+	}
+}
+
+func Process(in io.Reader, out io.Writer, opt string) {
+	scanner := bufio.NewScanner(in)
+	scanner.Split(bufio.ScanWords)
+	for scanner.Scan() {
+		word := strings.TrimSpace(scanner.Text())
+		fmt.Fprintln(out, ChangeCase(opt, word))
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("error while reading io: %v", err)
 	}
 }
 
