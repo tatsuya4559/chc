@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -184,5 +186,25 @@ func TestChangeCase(t *testing.T) {
 			t.Errorf("ChangeCase(%q, %q) was %q, want %q",
 				tt.opt, tt.word, got, tt.want)
 		}
+	}
+}
+
+func TestProcess(t *testing.T) {
+	input := `fooBar this-is-a-test  snake_case
+		ClassName`
+	want := `foo_bar
+this_is_a_test
+snake_case
+class_name
+`
+
+	in := strings.NewReader(input)
+	var out bytes.Buffer
+	if err := Process(in, &out, "snake"); err != nil {
+		t.Fatalf("Process returned error: %v", err)
+	}
+	got := out.String()
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
