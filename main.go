@@ -17,7 +17,7 @@ func printHelp() {
 chc change word to specified case.
 
 	-c=STRING	Style to change to.
-			[s[nake], u[pper], c[amel], p[ascal]] (default: snake)
+			[s[nake], u[pper], c[amel], p[ascal], l[isp]] (default: snake)
 `
 	fmt.Fprintf(os.Stderr, "%s\n", usage)
 	os.Exit(0)
