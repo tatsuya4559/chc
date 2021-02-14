@@ -38,10 +38,12 @@ func main() {
 	flag.Parse()
 
 	if isatty.IsTerminal(os.Stdin.Fd()) {
+		// interactive
 		for _, word := range flag.Args() {
 			fmt.Println(ChangeCase(*casePtr, word))
 		}
 	} else {
+		// pipe
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Split(bufio.ScanWords)
 		for scanner.Scan() {
@@ -54,6 +56,7 @@ func main() {
 	}
 }
 
+// ChangeCase changes case-style of word.
 func ChangeCase(opt, word string) string {
 	switch strings.ToLower(opt) {
 	case "s", "snake":
