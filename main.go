@@ -28,7 +28,7 @@ const (
 	UPPER  = "UPPER"
 	CAMEL  = "CAMEL"
 	PASCAL = "PASCAL"
-	// LISP = "LISP"
+	LISP   = "LISP"
 )
 
 func main() {
@@ -67,12 +67,17 @@ func ChangeCase(opt, word string) string {
 		return toCamel(word)
 	case "p", "pascal":
 		return toPascal(word)
+	case "l", "lisp":
+		return toLisp(word)
 	default:
 		return toSnake(word)
 	}
 }
 
 func determineCase(word string) string {
+	if strings.Contains(word, "-") {
+		return LISP
+	}
 	if word == strings.ToLower(word) {
 		return SNAKE
 	}
@@ -92,6 +97,8 @@ func tokenize(word string) []string {
 		return strings.Split(word, "_")
 	case UPPER:
 		return strings.Split(strings.ToLower(word), "_")
+	case LISP:
+		return strings.Split(strings.ToLower(word), "-")
 	}
 
 	rword := []rune(word)
@@ -144,6 +151,11 @@ func toPascal(word string) string {
 		b.WriteString(title(t))
 	}
 	return b.String()
+}
+
+// toLisp changes word to lisp-case.
+func toLisp(word string) string {
+	return strings.Join(tokenize(word), "-")
 }
 
 // title capitalizes first letter of argument.
