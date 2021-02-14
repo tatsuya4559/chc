@@ -13,7 +13,7 @@ import (
 )
 
 func printHelp() {
-	usage := `usage: chc -c case <word>
+	usage := `usage: chc -c <case> <word>
 chc change word to specified case.
 
 	-c=STRING	Style to change to.
