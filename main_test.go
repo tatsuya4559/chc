@@ -19,6 +19,8 @@ func TestDetermineCase(t *testing.T) {
 		{input: "fooBar", want: CAMEL},
 		{input: "FooBar", want: PASCAL},
 		{input: "foo-bar", want: LISP},
+		{input: "getURL", want: CAMEL},
+		{input: "StringIO", want: PASCAL},
 	}
 
 	for _, tt := range tests {
@@ -41,6 +43,8 @@ func TestTokenize(t *testing.T) {
 		{input: "fooBar", want: []string{"foo", "bar"}},
 		{input: "FooBar", want: []string{"foo", "bar"}},
 		{input: "foo-bar", want: []string{"foo", "bar"}},
+		{input: "getURL", want: []string{"get", "url"}},
+		{input: "StringIO", want: []string{"string", "io"}},
 	}
 
 	for _, tt := range tests {
@@ -63,6 +67,7 @@ func TestToSnake(t *testing.T) {
 		{input: "fooBar", want: "foo_bar"},
 		{input: "FooBar", want: "foo_bar"},
 		{input: "foo-bar", want: "foo_bar"},
+		{input: "getURL", want: "get_url"},
 	}
 
 	for _, tt := range tests {
@@ -85,6 +90,7 @@ func TestToUpper(t *testing.T) {
 		{input: "fooBar", want: "FOO_BAR"},
 		{input: "FooBar", want: "FOO_BAR"},
 		{input: "foo-bar", want: "FOO_BAR"},
+		{input: "getURL", want: "GET_URL"},
 	}
 
 	for _, tt := range tests {
@@ -107,6 +113,7 @@ func TestToCamel(t *testing.T) {
 		{input: "fooBar", want: "fooBar"},
 		{input: "FooBar", want: "fooBar"},
 		{input: "foo-bar", want: "fooBar"},
+		{input: "StringIO", want: "stringIo"},
 	}
 
 	for _, tt := range tests {
@@ -129,6 +136,7 @@ func TestToPascal(t *testing.T) {
 		{input: "fooBar", want: "FooBar"},
 		{input: "FooBar", want: "FooBar"},
 		{input: "foo-bar", want: "FooBar"},
+		{input: "getURL", want: "GetUrl"},
 	}
 
 	for _, tt := range tests {
@@ -151,6 +159,7 @@ func TestToLisp(t *testing.T) {
 		{input: "fooBar", want: "foo-bar"},
 		{input: "FooBar", want: "foo-bar"},
 		{input: "foo-bar", want: "foo-bar"},
+		{input: "getURL", want: "get-url"},
 	}
 
 	for _, tt := range tests {

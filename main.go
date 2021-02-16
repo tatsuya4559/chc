@@ -120,7 +120,8 @@ func tokenize(word string) []string {
 	var result []string
 	var start int
 	for i := 1; i < len(rword); i++ {
-		if unicode.IsUpper(rword[i]) {
+		// don't split in the middle of an acronym
+		if unicode.IsUpper(rword[i]) && !unicode.IsUpper(rword[i-1]) {
 			result = append(result, strings.ToLower(string(rword[start:i])))
 			start = i
 		}
